@@ -99,4 +99,13 @@
                 window.meteogram = new Meteogram(jsonObject, 'container{{ forloop.counter0 }}');
             {% endfor %}
         </script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-JB5Q0JJ5N9"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-JB5Q0JJ5N9');
+        </script>
 {% endblock content %}
