@@ -3,8 +3,9 @@ import data_utils.data as data
 
 sched = BlockingScheduler()
 
-@sched.scheduled_job('interval', hours=1)
+
 def timed_job():
     data.addHourDataToDB()
 
+sched.add_job(timed_job, 'cron', minute=5)
 sched.start()
