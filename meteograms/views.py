@@ -25,7 +25,7 @@ def bootstrap(req):
 
         daysToReq = []
         if startDT == endDT:
-            daysToReq = [start]
+            daysToReq = [str(datetime.strptime(start, '%m/%d/%Y').strftime('%-m/%-d/%Y'))]
         else:
             daysToReq = pd.date_range(startDT,endDT-timedelta(),freq='d').strftime('%-m/%-d/%Y')  
 
