@@ -27,7 +27,7 @@ def bootstrap(req):
         if startDT == endDT:
             daysToReq = [start]
         else:
-            daysToReq = pd.date_range(startDT,endDT-timedelta(),freq='d').strftime('%m/%d/%Y')
+            daysToReq = pd.date_range(startDT,endDT-timedelta(),freq='d').strftime('%-m/%-d/%Y')  
 
         daysList = [serializers.serialize("json", WholeDayData.objects.all().filter(date=day)) for day in daysToReq]
         lists = [day for day in daysList if day!='[]']
@@ -36,7 +36,6 @@ def bootstrap(req):
                     'lists' : lists
                   }
 
-        print("found date")
         return render(req, 'meteograms/extension.html', context)  
     else:
         return render(req, 'meteograms/extension.html')
