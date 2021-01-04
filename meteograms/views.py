@@ -39,3 +39,5 @@ def bootstrap(req):
         return render(req, 'meteograms/extension.html', context)  
     else:
         return render(req, 'meteograms/extension.html')
+def about(req):
+    return render(req, 'meteograms/about.html')        
