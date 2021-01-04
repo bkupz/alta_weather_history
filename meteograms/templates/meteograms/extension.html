@@ -1,0 +1,102 @@
+{% extends "meteograms/bootstrap.html" %}
+{% load static %}
+{% block scripts %} 
+    <!--for the date picker-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <!-- meteogram scripts -->
+    <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>-->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/windbarb.js"></script>
+    <script src="https://code.highcharts.com/modules/pattern-fill.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js"></script>
+{% endblock scripts %}
+{% block content %}
+
+        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 50%">
+            <i class="fa fa-calendar"></i>&nbsp;
+            <span></span> <i class="fa fa-caret-down"></i>
+        </div>
+
+        {% for day in lists %}
+        <figure class="highcharts-figure">
+            <div id="container{{ forloop.counter0 }}" style="max-width: 800px; height: 310px; margin: 0 auto">
+                <div style="margin-top: 100px; text-align: center" id="loading">
+                    <i class="fa fa-spinner fa-spin"></i> Loading data from external source
+                </div>
+            </div>
+        </figure>
+        {% endfor %}
+
+        <script type="text/javascript">
+            $(function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                var searchDate = urlParams.get('date');
+
+                if(!searchDate)
+                {
+                    var start = moment();
+                    var end = moment();
+                } else {
+                    var searchStart = searchDate.split("-")[0];
+                    var searchEnd = searchDate.split("-")[1];
+                    var start = moment(searchStart, "MM/DD/YYYY")
+                    var end = moment(searchEnd, "MM/DD/YYYY")
+                }
+
+                function cb(start, end) {
+
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+
+                    var datePicked = start.format('MM/DD/YYYY') + '-' + end.format('MM/DD/YYYY');
+                    var today = moment().format('MM/DD/YYYY') + '-' + moment().format('MM/DD/YYYY');
+                    var getUrl = window.location;
+                    var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+
+                    if(!searchDate)
+                    {
+                        window.location = baseUrl + "?date=" + today;
+                        searchDate = today
+                    }
+
+                    var compare = searchDate === datePicked;
+                    if(!compare)
+                    {
+                        window.location = baseUrl + "?date=" + datePicked;
+                    }
+                }
+
+                $('#reportrange').daterangepicker({
+                    startDate: start,
+                    endDate: end,
+                    ranges: {
+                       'Today': [moment(), moment()],
+                       'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                       'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                       'This Month': [moment().startOf('month'), moment().endOf('month')],
+                       'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    }
+                }, cb);
+
+                cb(start, end);
+
+            });
+        </script>
+        <script src="{% static 'meteograms/meteogram.js' %}"></script>
+        <script type="text/javascript">
+            {% for day in lists %}
+                var jsonObject = JSON.parse('{{ day | escapejs }}');
+
+                window.meteogram = new Meteogram(jsonObject, 'container{{ forloop.counter0 }}');
+            {% endfor %}
+        </script>
+{% endblock content %}
