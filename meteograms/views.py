@@ -6,10 +6,6 @@ from datetime import datetime, timedelta
 import data_utils.data as data
 from .models import WholeDayData
 
-def home(req):
-    return render(req, 'meteograms/home.html')
-    #return HttpResponse(data.getHTML())
-
 def bootstrap(req):
     if 'date' in req.GET:
         start = req.GET.get('date').split("-")[0]
@@ -39,5 +35,6 @@ def bootstrap(req):
         return render(req, 'meteograms/extension.html', context)  
     else:
         return render(req, 'meteograms/extension.html')
+
 def about(req):
-    return render(req, 'meteograms/about.html')        
+    return render(req, 'meteograms/about.html')

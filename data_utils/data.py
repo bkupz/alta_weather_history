@@ -200,7 +200,6 @@ def getRange(start, end):
         return ""
 
     if startDT == endDT:
-        print("ballsacks")
         return [getDay(start)]
 
     daysToReq = pd.date_range(startDT,endDT-timedelta(days=1),freq='d').strftime('%m/%d/%Y')

@@ -352,8 +352,7 @@ Meteogram.prototype.getChartOptions = function () {
                 }
             },
             tooltip: {
-                pointFormat: '<span style="color:{point.color}">\u25CF</span> ' +
-                    '{series.name}: <b>{point.value}°C</b><br/>'
+                valueSuffix: ' °C'
             },
             zIndex: 1,
             color: '#FF3333',
@@ -371,8 +370,7 @@ Meteogram.prototype.getChartOptions = function () {
                 }
             },
             tooltip: {
-                pointFormat: '<span style="color:{point.color}">\u25CF</span> ' +
-                    '{series.name}: <b>{point.value}°C</b><br/>'
+                valueSuffix: ' °C'
             },
             zIndex: 1,
             color: '#ffcc00',
@@ -389,9 +387,8 @@ Meteogram.prototype.getChartOptions = function () {
                     }
                 }
             },
-            tooltip: {
-                pointFormat: '<span style="color:{point.color}">\u25CF</span> ' +
-                    '{series.name}: <b>{point.value}°C</b><br/>'
+            tooltip:  {
+                valueSuffix: ' °C'
             },
             zIndex: 1,
             color: '#0000ff',
@@ -568,9 +565,6 @@ Meteogram.prototype.parseMyData = function () {
             });
         }
     );
-
-    // Smooth the line
-    meteogram.smoothLine(meteogram.temperatures11);
 
     // Create the chart when the data is loaded
     console.log(meteogram)
