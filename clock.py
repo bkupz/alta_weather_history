@@ -13,5 +13,5 @@ def timed_job():
     print("Current Time =", current_time)
     data.addHourDataToDB()
 
-sched.add_job(timed_job, 'cron', minute=5)
+sched.add_job(timed_job, 'cron', minute=10)
 sched.start()
