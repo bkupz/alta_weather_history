@@ -178,8 +178,8 @@ def getDay(day):
 
     row = cursor.fetchone()
     while row is not None:
-            hourRows.append(row)
-            row = cursor.fetchone()
+        hourRows.append(row)
+        row = cursor.fetchone()
     conn.close()
 
     if not hourRows:
@@ -189,6 +189,28 @@ def getDay(day):
     dayDict = dayDataToDict(stringData)
 
     return dayDict
+
+def checkIfDatetimeExists(day, time):
+    query = "SELECT COUNT(*) as count FROM \"public\".\"whole_day_data\" WHERE (\"time\" = \'" + time + "\') AND (\"date\" = \'" + day + "\');"
+    print(query)
+    DATABASE_URL = os.environ['DATABASE_URL']
+
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor=conn.cursor()
+
+    cursor.execute(query)
+
+    print("The number of parts: ", cursor.rowcount)
+    count = 0
+
+    row = cursor.fetchone()
+    while row is not None:
+        if(row[0] > 0):
+            count = count + 1
+        row = cursor.fetchone()
+    conn.close()
+
+    return count > 0
 
 def getRange(start, end):
     try: #maybe check if it has not occured yet ? or put that in the datePicker?
